@@ -1,0 +1,198 @@
+#include<iostream>
+#include<string.h>
+using namespace std;
+#include<fstream>
+#include<vector>
+class sm
+{
+
+	char cma[10];  //help me in the dynamic memory allocation for this!
+	int itemno,quant,num;
+	float price,tax,total;
+	public:
+		sm()  //constructor to intialize all the variables
+		{
+		    cma[0]=0;
+		    cma[1]=1;
+		    cma[2]='/';
+		    cma[3]=0;
+		    cma[4]=1;
+		    cma[5]='/';
+		    cma[6]=1;
+		    cma[7]=9;
+		    cma[8]=7;
+		    cma[9]=0;
+			itemno=0;
+			quant=0;
+			price=0.0;
+			total=0.0;
+			tax=0.18;
+			num=0;
+
+		}
+        char cit[50];
+		void showdata();
+		void calculate();
+		void add();
+
+		void modify();
+};
+
+void sm::add()
+{   cin.ignore();
+	cout<<"Enter item name:\n";
+	cin.getline(cit,50);
+
+	cout<<"\nEnter the manufacturing data (Best before...):\n";
+    cin.ignore();
+	cin.getline(cma,10);
+
+
+    cout<<"\nEnter the item no:\n";
+	cin>>itemno;
+	cout<<"\nEnter the price:\n";
+	cin>>price;
+	cout<<"\nEnter the quantity of your item:\n";
+	cin>>quant;
+
+
+};
+
+
+void sm::showdata()
+{
+	cout<<"----------SHOPPING BILL----------\n";
+	cout<<"Item:\t"<<puts(cit)<<endl;
+	cout<<"Item no:\t"<<itemno<<endl;
+	cout<<"Quantity:\t"<<quant<<endl;
+	cout<<"Price:\t"<<total<<endl;
+	cout<<"Manufacturing data:\t"<<puts(cma)<<endl;
+	cout<<"----------THANK YOU COME AGAIN----------\n";
+};
+
+void sm::calculate()  //help me to check whether the logic is correct in calculating the total amount
+{
+	for(i=0;i<num;i++)
+	{
+		total=total+(quant*price)+(quant*tax*price);
+	}
+}
+ void sm::modify()
+ { int opt1;
+   cout<<"what do you wish to modify"<<endl<<"enter 1 for name,\n 2 for manufacturing date,\n 3 for itemno,\n 4 for quantity,\n 5 for price,\n 6 for tax";
+   cin>>opt1;
+   switch(opt1)
+   {  case 1:cin.ignore();
+             cin.getline(cit,50);
+             break;
+   case 2:  cin.ignore();
+            cin.getline(cma,10);
+            break;
+   case 3:  cin>>itemno;
+            break;
+   case 4:  cin>>quant;
+            break;
+   case 5:  cin>>price;
+            break;
+   case 6: cin>>tax;
+           break;
+   default: cout<<"error, wrong choice";
+            break;
+   }
+
+
+ };
+
+int main()
+{   sm s1[100];
+	int i;
+	cout<<"Enter the amount of items you would like to add:\n";
+	cin>>sm.num;
+
+
+	for( i=0;i<sm.num;i++)
+	{
+		s1[i].add();
+
+
+	}
+	ofstream fout;
+			fout.open("data");
+			fout.write((char*)&s1,sizeof(sm));
+	fout.close();
+	int opt;
+	char ch='y';
+	while(ch!='n')
+	{
+	cout<<"--------------------\n";
+	cout<<"1.Billing Report\n2.Add item\n3.Modify item\n4.Remove item\n5.File for item details\n";
+	cout<<"--------------------\n";
+	cout<<"Enter your choice:\n";
+	cin>>opt;
+	switch(opt)
+	{
+		case 1: for(i=0;i<sm.num;i++)
+		{
+		s1[i].showdata();
+		}
+		break;
+		case 2: { s1[sm.num].add();
+		          sm.num++;
+			    ofstream fout;
+			    			fout.open("data",ios::app);
+			    			fout.write((char*)&s1,sizeof(s1));
+			    	fout.close();
+		        }break;
+		case 3:{ char item1[50];
+		        cout<<"enter name";
+		        cin.ignore();
+		        cin.getline(item1,50);
+		        int flag;
+		        for( flag=0,i=0;i<n;i++)
+		        { if(strcmp(item1,s1[i].cit)==0)
+		         {  flag=1;
+		        	s1[i].modify();
+
+		         }
+
+		        }
+		        if(flag==0)
+		        { cout<<"the item isnt in stock";}
+		        else
+		        {ofstream fout;
+		        			fout.open("data",ios::trunc);
+		        			fout.write((char*)&s1,sizeof(s1));
+		        	fout.close();}
+		        }break;
+		case 4:  char item1[50];
+        cout<<"enter name";
+        cin.ignore();
+        cin.getline(item1,50);
+        int flag;
+        for( flag=0,i=0;i<n;i++)
+        { if(strcmp(item1,s1[i].cit)==0)
+         {  flag=1;
+            for(  ;i<n;i++)
+               s1[i]=s1[i+1];
+            break;
+         }
+        }
+        if(flag==0)
+        { cout<<"the item isnt in stock";
+
+        }
+        else
+       {ofstream fout;
+        fout.open("data",ios::trunc);
+        fout.write((char*)&s1,sizeof(sm));
+        fout.close();}
+		sm.num--;
+		
+        break;
+		default: cout<<"Invalid Choice:\n";
+		break;
+	}
+	cout<<"Do you wish to continue?(y/n)\n";
+	cin>>ch;
+	return 0;
+}
